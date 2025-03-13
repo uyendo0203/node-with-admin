@@ -1,6 +1,13 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const expressLayouts = require('express-ejs-layouts');
+const Blog = require('./models/Blog');
+const User = require('./models/User');
+const connectDB = require('./config/db');
+
+(async () => {
+  await connectDB(); // Gọi hàm kết nối MongoDB
+})();
 
 const app = express();
 const PORT = 3000; //xxx
@@ -12,14 +19,13 @@ app.set('view engine', 'ejs');
 app.use(expressLayouts); // Đảm bảo đã sử dụng express-ejs-layouts
 app.set('layout', 'layouts/main'); // Default layout file (optional)
 
-console.log(app.locals);
-
+// ================================================== 
 
 // Dữ liệu mẫu cho bài viết
-let blogs = [
-  { id: 1, title: 'Bài viết 1', content: 'Nội dung bài viết 1' },
-  { id: 2, title: 'Bài viết 2', content: 'Nội dung bài viết 2' },
-];
+// let blogs = [
+//   { id: 1, title: 'Bài viết 1', content: 'Nội dung bài viết 1' },
+//   { id: 2, title: 'Bài viết 2', content: 'Nội dung bài viết 2' },
+// ];
 
 // Dữ liệu mẫu cho người dùng
 let users = [
@@ -31,81 +37,109 @@ let users = [
 const path = require('path');
 app.set('views', path.join(__dirname, 'views'));
 
-// Route cho trang chính
+// Home
 app.get('/', (req, res) => {
   res.render('index', { title: 'Trang chính' });
 });
 
-// Route cho danh sách blog
-app.get('/blogs', (req, res) => {
-  res.render('blog', { title: 'Danh sách bài viết', blogs });
+// List blog
+app.get('/blogs', async (req, res) => {
+  const db = await connectDB();
+  if (!db) {
+    return res.status(500).send('Failed to connect to database');
+  }
+  const blogs = await db.collection('blogs').find().toArray();
+  res.render('blog', { title: 'Bài viết', blogs });
 });
 
-// Route để thêm blog
+// Add blog
 app.get('/blogs/add', (req, res) => {
-  res.render('add-blog', { title: 'Thêm bài viết' });
+  res.render('blog-add', { title: 'Thêm bài viết' });
 });
 
-app.post('/blogs/add', (req, res) => {
-  const newBlog = {
-    id: blogs.length + 1,
-    title: req.body.title,
-    content: req.body.content,
-  };
-  blogs.push(newBlog);
-  res.redirect('/blogs');
+app.post('/blogs/add', async (req, res) => {
+  try {
+      console.log("📩 Dữ liệu nhận được:", req.body); // Log dữ liệu gửi lên
+
+      const { title, content } = req.body;
+      const newBlog = new Blog({ title, content });
+
+      await newBlog.save(); // Lưu vào MongoDB
+
+      console.log("✅ Bài viết đã được thêm:", newBlog);
+      res.status(201).json({ message: "Thêm bài viết thành công", blog: newBlog });
+  } catch (err) {
+      console.error('❌ Lỗi khi lưu blog:', err);
+      res.status(500).json({ error: err.message });
+  }
 });
 
-// Route để sửa blog
-app.get('/blogs/edit/:id', (req, res) => {
-  const blog = blogs.find(b => b.id == req.params.id);
+
+// Edit blog
+app.get('/blogs/edit/:id', async (req, res) => {
+  const db = await connectDB();
+  if (!db) {
+    return res.status(500).send('Failed to connect to database');
+  }
+  const blog = await db.collection('blogs').findOne({ _id: req.params.id });
   if (blog) {
-    res.render('edit-blog', { title: 'Sửa bài viết', blog });
+    res.render('blog-edit', { title: 'Sửa bài viết', blog });
   } else {
     res.redirect('/blogs');
   }
 });
 
-app.post('/blogs/edit/:id', (req, res) => {
-  const blog = blogs.find(b => b.id == req.params.id);
-  if (blog) {
-    blog.title = req.body.title;
-    blog.content = req.body.content;
+app.post('/blogs/edit/:id', async (req, res) => {
+  const db = await connectDB();
+  if (!db) {
+    return res.status(500).send('Failed to connect to database');
   }
+  await db.collection('blogs').updateOne({ _id: req.params.id }, { $set: { title: req.body.title, content: req.body.content } });
   res.redirect('/blogs');
 });
 
-// Route để xóa blog
-app.post('/blogs/delete/:id', (req, res) => {
-  blogs = blogs.filter(b => b.id != req.params.id);
+// Delete blog
+app.post('/blogs/delete/:id', async (req, res) => {
+  const db = await connectDB();
+  if (!db) {
+    return res.status(500).send('Failed to connect to database');
+  }
+  await db.collection('blogs').deleteOne({ _id: req.params.id });
   res.redirect('/blogs');
 });
 
-// Route cho danh sách người dùng
-app.get('/users', (req, res) => {
-  res.render('users', { title: 'Danh sách người dùng', users });
+// List users
+app.get('/users', async (req, res) => {
+  const db = await connectDB();
+  if (!db) {
+    return res.status(500).send('Failed to connect to database');
+  }
+  const users = await db.collection('users').find().toArray();
+  res.render('users', { title: 'Người dùng', users });
+  console.log({users});
 });
 
-// Route để thêm người dùng
+// Add user
 app.get('/users/add', (req, res) => {
-  res.render('add-user', { title: 'Thêm người dùng' });
+  res.render('user-add', { title: 'Thêm người dùng' });
 });
 
-app.post('/users/add', (req, res) => {
-  const newUser = {
-    id: users.length + 1,
-    username: req.body.username,
-    email: req.body.email,
-  };
-  users.push(newUser);
-  res.redirect('/users');
+app.post('/users/add', async (req, res) => {
+  try {
+      const newUser = new User(req.body);
+      await newUser.save();
+      res.status(201).json({ message: 'User created!', user: newUser });
+      // Remove the redundant res.redirect('/users');
+  } catch (error) {
+      res.status(400).json({ error: error.message });
+  }
 });
 
-// Route để sửa người dùng
+// Edit user 
 app.get('/users/edit/:id', (req, res) => {
   const user = users.find(u => u.id == req.params.id);
   if (user) {
-    res.render('edit-user', { title: 'Sửa người dùng', user });
+    res.render('user-edit', { title: 'Sửa người dùng', user });
   } else {
     res.redirect('/users');
   }
@@ -120,13 +154,14 @@ app.post('/users/edit/:id', (req, res) => {
   res.redirect('/users');
 });
 
-// Route để xóa người dùng
+// Delete user 
 app.post('/users/delete/:id', (req, res) => {
   users = users.filter(u => u.id != req.params.id);
   res.redirect('/users');
 });
 
-// Bắt đầu server
+// Start server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
+

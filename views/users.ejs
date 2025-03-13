@@ -1,6 +1,8 @@
 <% title = "Danh sách người dùng" -%>
 
 <h1 class="m-0">Danh sách người dùng</h1>
+<a href="/users/add" class="btn btn-primary">Thêm người dùng</a>
+
 <table class="table table-bordered">
     <thead>
         <tr>
@@ -11,18 +13,25 @@
         </tr>
     </thead>
     <tbody>
-        <% users.forEach(user => { %>
+        <% if (users.length == 0) { %>            
             <tr>
-                <td><%= user.id %></td>
-                <td><%= user.username %></td>
-                <td><%= user.email %></td>
-                <td>
-                    <a href="/users/edit/<%= user.id %>" class="btn btn-warning">Sửa</a>
-                    <form action="/users/delete/<%= user.id %>" method="POST" style="display:inline;">
-                        <button type="submit" class="btn btn-danger">Xóa</button>
-                    </form>
-                </td>
+                <td colspan="4">No data</td>
             </tr>
-        <% }) %>
+        <% } else { %>
+            <% users.forEach(user => { %>
+                <tr>
+                    <td><%= user.id %></td>
+                    <td><%= user.username %></td>
+                    <td><%= user.email %></td>
+                    <td>
+                        <a href="/users/edit/<%= user.id %>" class="btn btn-warning">Sửa</a>
+                        <form action="/users/delete/<%= user.id %>" method="POST" style="display:inline;">
+                            <button type="submit" class="btn btn-danger">Xóa</button>
+                        </form>
+                    </td>
+                </tr>
+            <% }) %>
+        <% } %>
+
     </tbody>
 </table>
