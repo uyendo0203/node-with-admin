@@ -1,0 +1,28 @@
+<% title = "Danh sách bài viết" -%>
+
+<h1 class="m-0">Danh sách bài viết</h1>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Tiêu đề</th>
+            <th>Nội dung</th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% blogs.forEach(blog => { %>
+            <tr>
+                <td><%= blog.id %></td>
+                <td><%= blog.title %></td>
+                <td><%= blog.content %></td>
+                <td>
+                    <a href="/blogs/edit/<%= blog.id %>" class="btn btn-warning">Sửa</a>
+                    <form action="/blogs/delete/<%= blog.id %>" method="POST" style="display:inline;">
+                        <button type="submit" class="btn btn-danger">Xóa</button>
+                    </form>
+                </td>
+            </tr>
+        <% }) %>
+    </tbody>
+</table>

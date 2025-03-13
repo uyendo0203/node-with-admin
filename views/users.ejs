@@ -1,0 +1,28 @@
+<% title = "Danh sách người dùng" -%>
+
+<h1 class="m-0">Danh sách người dùng</h1>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Tên người dùng</th>
+            <th>Email</th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% users.forEach(user => { %>
+            <tr>
+                <td><%= user.id %></td>
+                <td><%= user.username %></td>
+                <td><%= user.email %></td>
+                <td>
+                    <a href="/users/edit/<%= user.id %>" class="btn btn-warning">Sửa</a>
+                    <form action="/users/delete/<%= user.id %>" method="POST" style="display:inline;">
+                        <button type="submit" class="btn btn-danger">Xóa</button>
+                    </form>
+                </td>
+            </tr>
+        <% }) %>
+    </tbody>
+</table>
