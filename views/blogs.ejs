@@ -26,12 +26,24 @@
                     <td><%= blog.title %></td>
                     <td><%= blog.content %></td>
                     <td>
-                        <a href="/blogs/edit/<%= blog.id %>" class="btn btn-warning">Sửa</a>
-                        <form action="/blogs/delete/<%= blog.id %>" method="POST" style="display:inline;">
+                        <a href="/blogs/edit/<%= blog._id %>" class="btn btn-warning">Sửa</a>
+                        <form action="/blogs/delete/<%= blog._id %>?_method=DELETE" method="POST" style="display:inline;">
                             <button type="submit" class="btn btn-danger">Xóa</button>
                         </form>
                     </td>
-                    <td><%= blog.createdAt %></td>
+                    <% 
+                        function formatDate(date) {
+                            const d = new Date(date);
+                            const hours = String(d.getHours()).padStart(2, '0');
+                            const minutes = String(d.getMinutes()).padStart(2, '0');
+                            const day = String(d.getDate()).padStart(2, '0');
+                            const month = String(d.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+                            const year = d.getFullYear();
+
+                            return `${hours}:${minutes} ${day}/${month}/${year}`;
+                        }
+                    %>
+                    <td><%= formatDate(blog.createdAt) %></td>
                 </tr>
             <% }) %>
         <% } %>

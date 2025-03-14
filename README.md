@@ -1,4 +1,4 @@
 # node-with-admin
 
 
-chưa xong, lỗi add và edit blog
+chưa xong, blog: lỗi add và edit 
