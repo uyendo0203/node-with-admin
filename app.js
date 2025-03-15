@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const expressLayouts = require('express-ejs-layouts');
 const methodOverride = require('method-override');
 const connectDB = require('./config/db');
+const path = require('path'); // Moved here
 const app = express();
 require('dotenv').config();
 
@@ -16,7 +17,7 @@ mongoose.connect(process.env.MONGO_URI, {
 
 
 // Middleware
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public'))); // Serve static files from 'public'
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(methodOverride('_method'));
 app.use(expressLayouts);
@@ -33,7 +34,6 @@ let users = [
 ];
 
 // Khai báo thư mục views (nếu cần)
-const path = require('path');
 app.set('views', path.join(__dirname, 'views'));
 
 // Home
@@ -49,7 +49,8 @@ app.use('/users', userRoutes);
 
 
 // Chạy server
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`🚀 Server chạy tại http://localhost:${PORT}`));
 
 
+module.exports = app;
