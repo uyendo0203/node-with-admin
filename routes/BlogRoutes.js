@@ -5,8 +5,6 @@ const router = express.Router();
 // Danh sách bài viết
 router.get('/', async (req, res) => {
     const blogs = await Blog.find().sort({ createdAt: -1 });
-    console.log({blogs});
-    
     res.render('blogs', { title: 'Danh sách blog', blogs });
 });
 
