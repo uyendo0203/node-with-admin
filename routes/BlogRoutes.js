@@ -8,15 +8,6 @@ router.get('/', async (req, res) => {
     res.render('blogs', { title: 'Danh sách blog', blogs });
 });
 
-// router.get('/', async (req, res) => {
-//     try {
-//         const blogs = await Blog.find().sort({ createdAt: -1 });
-//         res.render('blogs', { title: 'Danh sách blog', blogs });
-//     } catch (error) {
-//         res.status(500).send('Error fetching data');
-//     }
-// });
-
 // Form thêm blog
 router.get('/add', (req, res) => {
     res.render('blog-add', { title: 'Thêm bài viết' });
