@@ -38,8 +38,12 @@
 
 4. Chạy ứng dụng:
    ```bash
-   npm start
+   npm start  ---> start dự án
    ```
+   ```bash
+   npm run build-css  ---> run build css realtime
+   ```
+
 
 5. Truy cập ứng dụng tại:
    ```

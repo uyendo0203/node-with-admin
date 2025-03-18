@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title %></title>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.1.0/css/adminlte.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"  crossorigin="anonymous">
-    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="icon" href="/images/favicon.png" type="image/x-icon">
 </head>
 <body class="hold-transition sidebar-mini">
     <div class="wrapper">
@@ -26,13 +28,13 @@
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column">
                         <li class="nav-item">
-                            <a href="/blogs" class="nav-link">
+                            <a href="/blogs" class="nav-link <%= currentPage === 'blogs' ? 'active' : '' %>">
                                 <i class="nav-icon fas fa-blog"></i>
                                 <p>Blogs</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="/users" class="nav-link">
+                            <a href="/users" class="nav-link <%= currentPage === 'users' ? 'active' : '' %>">
                                 <i class="nav-icon fas fa-users"></i>
                                 <p>Users</p>
                             </a>

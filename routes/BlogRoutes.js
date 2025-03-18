@@ -5,12 +5,12 @@ const router = express.Router();
 // Danh sách bài viết
 router.get('/', async (req, res) => {
     const blogs = await Blog.find().sort({ createdAt: -1 });
-    res.render('blogs', { title: 'Danh sách blog', blogs });
+    res.render('blogs', { title: 'Danh sách blog', currentPage: 'blogs', blogs });
 });
 
 // Form thêm blog
 router.get('/add', (req, res) => {
-    res.render('blog-add', { title: 'Thêm bài viết' });
+    res.render('blog-add', { title: 'Thêm bài viết', currentPage: 'blogs'});
 });
 
 // Xử lý thêm blog
@@ -22,7 +22,7 @@ router.post('/add', async (req, res) => {
 // Form sửa blog
 router.get('/edit/:id', async (req, res) => {
     const blog = await Blog.findById(req.params.id);
-    res.render('blog-edit', { title: 'Chỉnh sửa blog', blog });
+    res.render('blog-edit', { title: 'Chỉnh sửa blog', currentPage: 'blogs', blog });
 });
 
 // Xử lý sửa blog

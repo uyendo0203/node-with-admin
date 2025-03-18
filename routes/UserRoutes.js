@@ -5,12 +5,12 @@ const router = express.Router();
 // Danh sách User
 router.get('/', async (req, res) => {
     const users = await User.find().sort({ createdAt: -1 });
-    res.render('users', { title: 'Danh sách user', users });
+    res.render('users', { title: 'Danh sách user', currentPage: 'users', users });
 });
 
 // Form thêm User
 router.get('/add', (req, res) => {
-    res.render('user-add', { title: 'Thêm user' });
+    res.render('user-add', { title: 'Thêm user', currentPage: 'users'});
 });
 
 // Xử lý thêm User
@@ -22,7 +22,7 @@ router.post('/add', async (req, res) => {
 // Form sửa User
 router.get('/edit/:id', async (req, res) => {
     const blog = await User.findById(req.params.id);
-    res.render('user-edit', { title: 'Chỉnh sửa user', blog });
+    res.render('user-edit', { title: 'Chỉnh sửa user',currentPage: 'users', blog });
 });
 
 // Xử lý sửa User

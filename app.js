@@ -26,20 +26,22 @@ app.use(expressLayouts);
 app.set('layout', 'layouts/main'); // Default layout file (optional)
 app.set('view engine', 'ejs');
 
+
 // ================================================== 
 // Khai báo thư mục views (nếu cần)
 app.set('views', path.join(__dirname, 'views'));
 
 // Home
 app.get('/', (req, res) => {
-  res.render('index', { title: 'Trang chính' });
+  res.render('index', { title: 'Trang chính', currentPage: '' });
 });
 
+// Routes
 const blogRoutes = require('./routes/BlogRoutes');
-app.use('/blogs', blogRoutes);
-
 const userRoutes = require('./routes/UserRoutes');
-app.use('/users', userRoutes);
+
+app.use('/blogs', blogRoutes); // Sử dụng blog routes
+app.use('/users', userRoutes); // Sử dụng user routes
 
 
 // Chạy server

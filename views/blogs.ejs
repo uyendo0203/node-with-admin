@@ -1,8 +1,12 @@
-<% title = "Danh sách bài viết" -%>
+<% title -%>
 
 <h1 class="m-0">Danh sách bài viết</h1>
 
-<a href="/blogs/add" class="btn btn-primary">Thêm bài viết</a>
+<h1 class="text-[30px] font-bold underline">
+    Hello world!
+  </h1>
+
+<a href="/blogs/add" class="btn btn-primary test">Thêm bài viết</a>
 
 <table class="table table-bordered bg-white mt-3">
     <thead>
@@ -26,10 +30,12 @@
                     <td><%= blog.title %></td>
                     <td><%= blog.content %></td>
                     <td>
-                        <a href="/blogs/edit/<%= blog._id %>" class="btn btn-warning">Sửa</a>
-                        <form action="/blogs/delete/<%= blog._id %>?_method=DELETE" method="POST" style="display:inline;">
-                            <button type="submit" class="btn btn-danger">Xóa</button>
-                        </form>
+                        <div class="flex flex-column gap-[5px]">
+                            <a href="/blogs/edit/<%= blog._id %>" class="btn btn-warning">Sửa</a>
+                            <form action="/blogs/delete/<%= blog._id %>?_method=DELETE" method="POST" style="display:inline;">
+                                <button type="submit" class="btn btn-danger">Xóa</button>
+                            </form>
+                        </div>
                     </td>
                     <% 
                         function formatDate(date) {

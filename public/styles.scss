@@ -1,4 +1,10 @@
 /* public/style.css */
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 body {
     font-family: Arial, sans-serif;
 }
@@ -14,6 +20,11 @@ th, td {
     text-align: left;
 }
 
-h1 {
-    text-align: center;
+
+
+
+.content{
+    .test{
+        color: red;
+    }
 }
