@@ -41,12 +41,13 @@ app.get('/', (req, res) => {
 
 // Routes
 const blogRoutes = require('./routes/BlogRoutes');
-app.use('/blogs', blogRoutes); // Sử dụng blog routes
+app.use('/', blogRoutes); // Sử dụng blog routes
 
 const userRoutes = require('./routes/UserRoutes');
 app.use('/users', userRoutes); // Sử dụng user routes
 
 const settingsRoutes = require('./routes/SettingsRoute');
+const Blog = require('./models/Blog');
 app.use('/settings', settingsRoutes); // Sử dụng user routes
 
 
