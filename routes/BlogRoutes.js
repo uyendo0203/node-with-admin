@@ -3,16 +3,35 @@ const Blog = require('../models/Blog');
 const router = express.Router();
 
 // Danh sách bài viết
+
+// html view
 router.get('/', async (req, res) => {
-    const breadcrumbs = [
-        { name: 'Home', url: '/' },
-        { name: 'Blogs', url: '/blogs' }
-    ];
-    const blogs = await Blog.find().sort({ createdAt: -1 });
-    res.render('blogs', { title: 'Danh sách blog', currentPage: 'blogs', blogs, breadcrumbs});
+    try {
+        const breadcrumbs = [
+            { name: 'Home', url: '/' },
+            { name: 'Blogs', url: '/blogs' }
+        ];
+        const blogs = await Blog.find(  ).sort({ createdAt: -1 });
+        res.render('blogs', { title: 'Danh sách blog', currentPage: 'blogs', blogs, breadcrumbs});
+    } catch (err) {
+        console.error('Error fetching blogs:', err);
+        res.status(500).send('Error fetching blogs');
+    }
+});
+
+// json api
+router.get('/api', async (req, res) => {
+    try {
+        const blogs = await Blog.find().sort({ createdAt: -1 });
+        res.json(blogs); // Trả về dữ liệu JSON
+    } catch (err) {
+        console.error('Error fetching blogs:', err);
+        res.status(500).send('Error fetching blogs');
+    }
 });
 
 // Form thêm blog
+// html view 
 router.get('/add', (req, res) => {
     const breadcrumbs = [
         { name: 'Home', url: '/' },
@@ -22,8 +41,7 @@ router.get('/add', (req, res) => {
     res.render('blog-add', { title: 'Thêm bài viết', currentPage: 'blogs', breadcrumbs });
 });
 
-// Xử lý thêm blog
-router.post('/add', async (req, res) => {
+router.post('/api/add', async (req, res) => {
     await Blog.create({ title: req.body.title, content: req.body.content });
     res.redirect('/blogs');
 });
