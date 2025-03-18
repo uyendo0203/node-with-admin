@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /* public/style.css */
 @tailwind base;
 @tailwind components;
@@ -17,8 +18,16 @@ th, td {
   text-align: left;
 }
 
-.content .test {
-  color: red;
+.breadcrumb {
+  background-color: #f8f9fa; /* Màu nền */
+  padding: 0.75rem 1rem; /* Khoảng cách bên trong */
+  border-radius: 0.375rem; /* Đường viền bo góc */
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+  content: ">";
+  padding: 0 0.5rem; /* Khoảng cách giữa các phần tử */
+  color: #6c757d; /* Màu sắc cho dấu phân cách */
 }
 
 /*# sourceMappingURL=styles.css.map */

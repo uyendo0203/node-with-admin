@@ -4,13 +4,22 @@ const router = express.Router();
 
 // Danh sách bài viết
 router.get('/', async (req, res) => {
+    const breadcrumbs = [
+        { name: 'Home', url: '/' },
+        { name: 'Blogs', url: '/blogs' }
+    ];
     const blogs = await Blog.find().sort({ createdAt: -1 });
-    res.render('blogs', { title: 'Danh sách blog', currentPage: 'blogs', blogs });
+    res.render('blogs', { title: 'Danh sách blog', currentPage: 'blogs', blogs, breadcrumbs});
 });
 
 // Form thêm blog
 router.get('/add', (req, res) => {
-    res.render('blog-add', { title: 'Thêm bài viết', currentPage: 'blogs'});
+    const breadcrumbs = [
+        { name: 'Home', url: '/' },
+        { name: 'Blogs', url: '/blogs' },
+        { name: 'Thêm bài viết', url: '/blogs/add' }
+    ];
+    res.render('blog-add', { title: 'Thêm bài viết', currentPage: 'blogs', breadcrumbs });
 });
 
 // Xử lý thêm blog
@@ -22,7 +31,12 @@ router.post('/add', async (req, res) => {
 // Form sửa blog
 router.get('/edit/:id', async (req, res) => {
     const blog = await Blog.findById(req.params.id);
-    res.render('blog-edit', { title: 'Chỉnh sửa blog', currentPage: 'blogs', blog });
+    const breadcrumbs = [
+        { name: 'Home', url: '/' },
+        { name: 'Blogs', url: '/blogs' },
+        { name: 'Chỉnh sửa bài viết', url: `/blogs/edit/${blog._id}` }
+    ];
+    res.render('blog-edit', { title: 'Chỉnh sửa blog', currentPage: 'blogs', blog, breadcrumbs });
 });
 
 // Xử lý sửa blog

@@ -1,0 +1,57 @@
+<!-- settings.ejs -->
+<div class="container">
+    <h1>Settings</h1>
+    <!-- Thông báo thành công -->
+    <% if (success) { %>
+        <div class="alert alert-success" role="alert" id="successAlert">
+            Lưu thông tin thành công!
+        </div>
+    <% } %>
+
+    <form action="/settings/save-settings" method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="favicon">Favicon:</label>
+            <% if (settings && settings.favicon) { %>
+                <div>
+                    <img src="/uploads/<%= settings.favicon %>" alt="Favicon" style="width: 50px; height: 50px;">
+                </div>
+            <% } %>
+            <input type="file" class="form-control" id="favicon" name="favicon">
+            <small class="form-text text-muted">Để bỏ qua, hãy để trống.</small>
+        </div>
+        <div class="form-group">
+            <label for="logo">Logo:</label>
+            <% if (settings && settings.logo) { %>
+                <div>
+                    <img src="/uploads/<%= settings.logo %>" alt="Logo" style="width: 100px; height: auto;">
+                </div>
+            <% } %>
+            <input type="file" class="form-control" id="logo" name="logo">
+            <small class="form-text text-muted">Để bỏ qua, hãy để trống.</small>
+        </div>
+        <div class="form-group">
+            <label for="address">Địa chỉ:</label>
+            <input type="text" class="form-control" id="address" name="address" value="<%= settings ? settings.address : '' %>" required>
+        </div>
+        <div class="form-group">
+            <label for="phone">Số điện thoại:</label>
+            <input type="number" class="form-control" id="phone" name="phone" value="<%= settings ? settings.phone : '' %>" required>
+        </div>
+        <div class="form-group">
+            <label for="copyright">Copyright:</label>
+            <input type="text" class="form-control" id="copyright" name="copyright" value="<%= settings ? settings.copyright : '' %>">
+        </div>
+        <button type="submit" class="btn btn-primary">Lưu thông tin</button>
+    </form>
+</div>
+
+<script>
+    // Kiểm tra xem thông báo thành công có tồn tại
+    const successAlert = document.getElementById('successAlert');
+    if (successAlert) {
+        // Đặt thời gian ẩn thông báo sau 5 giây (5000 milliseconds)
+        setTimeout(() => {
+            successAlert.style.display = 'none'; // Ẩn thông báo
+        }, 4000);
+    }
+</script>

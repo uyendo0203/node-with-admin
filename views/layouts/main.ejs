@@ -8,7 +8,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.1.0/css/adminlte.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"  crossorigin="anonymous">
     <link rel="stylesheet" href="/styles.css">
-    <link rel="icon" href="/images/favicon.png" type="image/x-icon">
+    <% if (settings && settings.favicon) { %>
+        <link rel="icon" href="/uploads/<%= settings.favicon %>" type="image/x-icon">
+    <% } %>
+
 </head>
 <body class="hold-transition sidebar-mini">
     <div class="wrapper">
@@ -27,6 +30,12 @@
             <div class="sidebar">
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column">
+                        <li class="nav-item">
+                            <a href="/settings" class="nav-link <%= currentPage === 'settings' ? 'active' : '' %>">
+                                <i class="nav-icon fas fa-cog"></i>
+                                <p>Settings</p>
+                            </a>
+                        </li>
                         <li class="nav-item">
                             <a href="/blogs" class="nav-link <%= currentPage === 'blogs' ? 'active' : '' %>">
                                 <i class="nav-icon fas fa-blog"></i>
@@ -48,13 +57,39 @@
         <div class="content-wrapper">
             <div class="content p-3">
                 <div class="container-fluid">
+                     <!-- Breadcrumbs -->
+                    <nav aria-label="Breadcrumb">
+                        <ol class="breadcrumb">
+                            <% breadcrumbs.forEach((breadcrumb, index) => { %>
+                                <li class="breadcrumb-item">
+                                    <% if (index === breadcrumbs.length - 1) { %>
+                                        <span><%= breadcrumb.name %></span> <!-- Trang cuối cùng không phải là liên kết -->
+                                    <% } else { %>
+                                        <a href="<%= breadcrumb.url %>"><%= breadcrumb.name %></a>
+                                    <% } %>
+                                </li>
+                            <% }); %>
+                        </ol>
+                    </nav>
+
                     <%- body %> <!-- Chèn nội dung cụ thể ở đây -->
                 </div>
             </div>
         </div>
 
         <footer class="main-footer">
-            <strong>DB Name: Cluster0 (from cloud.mongodb)</strong>
+            <div class="row justify-content-start align-items-center">
+                    <% if (settings && settings.logo) { %>
+                        <div>
+                            <img src="/uploads/<%= settings.logo %>" alt="Logo" style="width: 30px; height: auto;">
+                        </div>
+                    <% } %>
+                    <strong class="ml-2">
+                        <% if (settings && settings.copyright) { %>
+                            <%= settings.copyright %>
+                        <% } %>
+                    </strong>
+              </div>
         </footer>
     </div>
 

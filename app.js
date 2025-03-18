@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const expressLayouts = require('express-ejs-layouts');
 const methodOverride = require('method-override');
-const connectDB = require('./config/db');
 const path = require('path'); // Moved here
 const app = express();
 require('dotenv').config();
@@ -26,22 +25,29 @@ app.use(expressLayouts);
 app.set('layout', 'layouts/main'); // Default layout file (optional)
 app.set('view engine', 'ejs');
 
+app.use(bodyParser.urlencoded({ extended: false }));
 
-// ================================================== 
 // Khai báo thư mục views (nếu cần)
 app.set('views', path.join(__dirname, 'views'));
 
+
 // Home
 app.get('/', (req, res) => {
-  res.render('index', { title: 'Trang chính', currentPage: '' });
+  const breadcrumbs = [
+    { name: 'Home', url: '/' },
+];
+  res.render('index', { title: 'Trang chính', currentPage: '', breadcrumbs });
 });
 
 // Routes
 const blogRoutes = require('./routes/BlogRoutes');
-const userRoutes = require('./routes/UserRoutes');
-
 app.use('/blogs', blogRoutes); // Sử dụng blog routes
+
+const userRoutes = require('./routes/UserRoutes');
 app.use('/users', userRoutes); // Sử dụng user routes
+
+const settingsRoutes = require('./routes/SettingsRoute');
+app.use('/settings', settingsRoutes); // Sử dụng user routes
 
 
 // Chạy server
