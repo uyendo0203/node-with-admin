@@ -7,7 +7,8 @@ const router = express.Router();
 // JSON list of blogs
 router.get('/api/blogs', async (req, res) => {
     try {
-        const blogs = await Blog.find().sort({ createdAt: -1 });
+        // Chỉ lấy những blog có isActive = true
+        const blogs = await Blog.find({ isActive: true }).sort({ createdAt: -1 });
         res.json(blogs); // Trả về dữ liệu JSON
     } catch (err) {
         console.error('Error fetching blogs:', err);

@@ -20,7 +20,11 @@ th, td {
     text-align: left;
 }
 
-
+table{
+    th{
+        vertical-align: top !important;
+    }
+}
 
 
 .content{

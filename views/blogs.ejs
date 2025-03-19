@@ -10,12 +10,13 @@
             <th>Nội dung</th>
             <th>Hành động</th>
             <th>Thời gian</th>
+            <th>Trạng thái</th> <!-- Cột mới cho trạng thái -->
         </tr>
     </thead>
     <tbody>
         <% if (blogs.length == 0) { %>
             <tr>
-                <td colspan="4">No data</td>
+                <td colspan="6">No data</td>
             </tr>
         <% } else { %>
             <% blogs.forEach((blog, index) => { %>
@@ -37,16 +38,26 @@
                             const hours = String(d.getHours()).padStart(2, '0');
                             const minutes = String(d.getMinutes()).padStart(2, '0');
                             const day = String(d.getDate()).padStart(2, '0');
-                            const month = String(d.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+                            const month = String(d.getMonth() + 1).padStart(2, '0');
                             const year = d.getFullYear();
 
                             return `${hours}:${minutes} ${day}/${month}/${year}`;
                         }
                     %>
                     <td><%= formatDate(blog.createdAt) %></td>
+                    <td>
+                        <!-- Checkbox để thay đổi trạng thái -->
+                        <form action="/blogs/status/<%= blog._id %>?_method=POST" method="POST" style="display:inline;">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="statusCheckbox<%= blog._id %>" name="isActive" <%= blog.isActive ? 'checked' : '' %> onchange="this.form.submit()">
+                                <label class="form-check-label" for="statusCheckbox<%= blog._id %>">
+                                    <%= blog.isActive ? 'Active' : 'Inactive' %>
+                                </label>
+                            </div>
+                        </form>
+                    </td>
                 </tr>
             <% }) %>
         <% } %>
-
     </tbody>
 </table>

@@ -18,6 +18,10 @@ th, td {
   text-align: left;
 }
 
+table th {
+  vertical-align: top !important;
+}
+
 .breadcrumb {
   background-color: #f8f9fa; /* Màu nền */
   padding: 0.75rem 1rem; /* Khoảng cách bên trong */

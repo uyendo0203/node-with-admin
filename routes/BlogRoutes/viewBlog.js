@@ -10,7 +10,7 @@ router.get('/blogs', async (req, res) => {
             { name: 'Blogs', url: '/blogs' }
         ];
         const blogs = await Blog.find().sort({ createdAt: -1 });
-        res.render('blogs', { title: 'Danh sách blog', currentPage: 'blogs', blogs, breadcrumbs});
+        res.render('blogs', { title: 'Admin - Blog', currentPage: 'blogs', blogs, breadcrumbs});
     } catch (err) {
         console.error('Error fetching blogs:', err);
         res.status(500).send('Error fetching blogs');
@@ -25,7 +25,7 @@ router.get('/blogs/add', (req, res) => {
         { name: 'Blogs', url: '/blogs' },
         { name: 'Thêm bài viết', url: '/blogs/add' }
     ];
-    res.render('blog-add', { title: 'Thêm bài viết', currentPage: 'blogs', breadcrumbs });
+    res.render('blog-add', { title: 'Admin - Add Blog', currentPage: 'blogs', breadcrumbs });
 });
 
 router.post('/api/blogs/add', async (req, res) => {
@@ -41,7 +41,7 @@ router.get('/blogs/edit/:id', async (req, res) => {
         { name: 'Blogs', url: '/blogs' },
         { name: 'Chỉnh sửa bài viết', url: `/blogs/edit/${blog._id}` }
     ];
-    res.render('blog-edit', { title: 'Chỉnh sửa blog', currentPage: 'blogs', blog, breadcrumbs });
+    res.render('blog-edit', { title: 'Admin - Edit Blog', currentPage: 'blogs', blog, breadcrumbs });
 });
 
 // Xử lý sửa blog
@@ -58,6 +58,24 @@ router.delete('/blogs/delete/:id', async (req, res) => {
     } catch (err) {
         console.error('Error deleting blog:', err);
         res.status(500).send('Error deleting blog');
+    }
+});
+
+// Route để chuyển đổi trạng thái
+router.post('/blogs/status/:id', async (req, res) => {
+    try {
+        const blog = await Blog.findById(req.params.id);
+        if (blog) {
+            // Chuyển đổi trạng thái
+            blog.isActive = req.body.isActive === 'on'; // Checkbox gửi giá trị 'on' khi được chọn
+            await blog.save();
+            res.redirect('/blogs'); // Quay lại trang danh sách bài viết
+        } else {
+            res.status(404).send('Không tìm thấy bài viết');
+        }
+    } catch (error) {
+        console.error('Lỗi khi chuyển đổi trạng thái bài viết:', error);
+        res.status(500).send('Lỗi server');
     }
 });
 
