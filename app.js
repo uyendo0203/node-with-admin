@@ -40,14 +40,15 @@ app.get('/', (req, res) => {
 });
 
 // Routes
-const blogRoutes = require('./routes/BlogRoutes');
-app.use('/', blogRoutes); // Sử dụng blog routes
+const apiBlogRoutes = require('./routes/BlogRoutes/apiBlog');
+app.use('/', apiBlogRoutes); // Sử dụng blog routes api
+const viewBlogRoutes = require('./routes/BlogRoutes/viewBlog');
+app.use('/', viewBlogRoutes); // Sử dụng blog routes view
 
 const userRoutes = require('./routes/UserRoutes');
 app.use('/users', userRoutes); // Sử dụng user routes
 
 const settingsRoutes = require('./routes/SettingsRoute');
-const Blog = require('./models/Blog');
 app.use('/settings', settingsRoutes); // Sử dụng user routes
 
 

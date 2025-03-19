@@ -1,29 +1,6 @@
 const express = require('express');
-const Blog = require('../models/Blog');
+const Blog = require('../../models/Blog');
 const router = express.Router();
-
-
-// JSON list of blogs
-router.get('/api/blogs', async (req, res) => {
-    try {
-        const blogs = await Blog.find().sort({ createdAt: -1 });
-        res.json(blogs); // Trả về dữ liệu JSON
-    } catch (err) {
-        console.error('Error fetching blogs:', err);
-        res.status(500).send('Error fetching blogs');
-    }
-});
-
-//JSON detail of blog
-router.get('/api/blogs/:id', async (req, res) => {
-    try {
-        const blog = await Blog.findById(req.params.id);
-        res.json(blog); // Trả về dữ liệu JSON
-    } catch (err) {
-        console.error('Error fetching blog:', err);
-        res.status(500).send('Error fetching blog');
-    }
-});
 
 // HTML
 router.get('/blogs', async (req, res) => {
@@ -57,7 +34,7 @@ router.post('/api/blogs/add', async (req, res) => {
 });
 
 // Form sửa blog
-router.get('/edit/:id', async (req, res) => {
+router.get('/blogs/edit/:id', async (req, res) => {
     const blog = await Blog.findById(req.params.id);
     const breadcrumbs = [
         { name: 'Home', url: '/' },
@@ -68,13 +45,13 @@ router.get('/edit/:id', async (req, res) => {
 });
 
 // Xử lý sửa blog
-router.post('/edit/:id', async (req, res) => {
+router.post('/blogs/edit/:id', async (req, res) => {
     await Blog.findByIdAndUpdate(req.params.id, { title: req.body.title, content: req.body.content });
     res.redirect('/blogs');
 });
 
 // Xóa blog
-router.delete('/delete/:id', async (req, res) => {
+router.delete('/blogs/delete/:id', async (req, res) => {
     try {
         await Blog.findByIdAndDelete(req.params.id);
         res.redirect('/blogs');
