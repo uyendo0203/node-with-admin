@@ -6,7 +6,7 @@ const settingsSchema = new mongoose.Schema({
     address: { type: String, required: true },
     phone: { type: String, required: true }, // Có thể dùng String nếu số điện thoại có ký tự không phải số
     copyright: { type: String, default: '' }, // Không bắt buộc
-    site_title: { type: String, default: '' }, // Không bắt buộc
+    site_name: { type: String, default: '' }, // Không bắt buộc
     site_des: { type: String, default: '' }, // Không bắt buộc
 });
 
