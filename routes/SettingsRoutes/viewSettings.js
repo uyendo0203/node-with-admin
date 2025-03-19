@@ -6,7 +6,9 @@ const router = express.Router();
 
 // Add middleware to parse JSON and URL-encoded data
 router.use(express.json());
-router.use(express.urlencoded({ extended: true }));
+router.use(express.urlencoded({
+    extended: true
+}));
 
 // Configure multer
 const storage = multer.diskStorage({
@@ -17,19 +19,32 @@ const storage = multer.diskStorage({
         cb(null, Date.now() + '-' + file.originalname);
     }
 });
-const upload = multer({ storage: storage });
+const upload = multer({
+    storage: storage
+});
 
 // Render settings page
 router.get('/settings', async (req, res) => {
-    const breadcrumbs = [
-        { name: 'Home', url: '/' },
-        { name: 'Settings', url: '/settings' }
+    const breadcrumbs = [{
+            name: 'Home',
+            url: '/'
+        },
+        {
+            name: 'Settings',
+            url: '/settings'
+        }
     ];
 
     try {
         const settings = await Settings.findOne({});
         res.locals.settings = settings; // Khởi tạo làm đối tượng rỗng nếu không có
-        res.render('settings', { title: 'Settings', currentPage: 'settings', breadcrumbs, settings, success: req.query.success });
+        res.render('settings', {
+            title: 'Settings',
+            currentPage: 'settings',
+            breadcrumbs,
+            settings,
+            success: req.query.success
+        });
     } catch (err) {
         console.error('Error fetching settings from the database (/settings):', err);
         res.status(500).send('Error fetching settings from the database (/settings)');
@@ -37,7 +52,11 @@ router.get('/settings', async (req, res) => {
 });
 
 // Handle form submission
-router.post('/settings/save-settings', upload.fields([{ name: 'favicon' }, { name: 'logo' }]), async (req, res) => {
+router.post('/settings/save-settings', upload.fields([{
+    name: 'favicon'
+}, {
+    name: 'logo'
+}]), async (req, res) => {
     try {
         const existingSettings = await Settings.findOne({}); // Lấy cài đặt hiện tại
 
@@ -47,9 +66,10 @@ router.post('/settings/save-settings', upload.fields([{ name: 'favicon' }, { nam
 
         const faviconPath = req.files['favicon'] && req.files['favicon'].length > 0 ? req.files['favicon'][0].filename : existingSettings.favicon;
         const logoPath = req.files['logo'] && req.files['logo'].length > 0 ? req.files['logo'][0].filename : existingSettings.logo;
-
         const address = req.body.address;
         const phone = req.body.phone;
+        const site_title = req.body.site_title;
+        const site_des = req.body.site_des;
         const copyright = req.body.copyright;
 
         // Cập nhật cài đặt
@@ -57,6 +77,8 @@ router.post('/settings/save-settings', upload.fields([{ name: 'favicon' }, { nam
         existingSettings.logo = logoPath;
         existingSettings.address = address;
         existingSettings.phone = phone;
+        existingSettings.site_title = site_title;
+        existingSettings.site_des = site_des;
         existingSettings.copyright = copyright;
 
         await existingSettings.save(); // Lưu thay đổi
