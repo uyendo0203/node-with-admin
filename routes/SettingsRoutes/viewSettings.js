@@ -53,10 +53,12 @@ router.get('/settings', async (req, res) => {
 
 // Handle form submission
 router.post('/settings/save-settings', upload.fields([{
-    name: 'favicon'
-}, {
-    name: 'logo'
-}]), async (req, res) => {
+        name: 'favicon'
+    },
+    {
+        name: 'logo'
+    }
+]), async (req, res) => {
     try {
         const existingSettings = await Settings.findOne({}); // Lấy cài đặt hiện tại
 
@@ -83,7 +85,7 @@ router.post('/settings/save-settings', upload.fields([{
 
         await existingSettings.save(); // Lưu thay đổi
         console.log('Settings updated successfully in MongoDB');
-        res.redirect('/settings?success=true');
+        // res.redirect('/settings?success=true');
     } catch (err) {
         console.error('Error saving settings to the database:', err);
         return res.status(500).send('Error saving settings to the database: ' + err.message);
