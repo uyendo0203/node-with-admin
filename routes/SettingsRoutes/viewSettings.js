@@ -1,8 +1,7 @@
 const express = require('express');
 const path = require('path');
 const multer = require('multer');
-const Settings = require('../models/Settings');
-
+const Settings = require('../../models/Settings');
 const router = express.Router();
 
 // Add middleware to parse JSON and URL-encoded data
@@ -21,23 +20,24 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // Render settings page
-router.get('/', async (req, res) => {
+router.get('/settings', async (req, res) => {
     const breadcrumbs = [
         { name: 'Home', url: '/' },
-        { name: 'Blogs', url: '/blogs' }
+        { name: 'Settings', url: '/settings' }
     ];
 
     try {
         const settings = await Settings.findOne({});
-        res.render('settings', { title: 'Settings', currentPage: 'settings', breadcrumbs, settings: settings, success: req.query.success });
+        res.locals.settings = settings; // Khởi tạo làm đối tượng rỗng nếu không có
+        res.render('settings', { title: 'Settings', currentPage: 'settings', breadcrumbs, settings, success: req.query.success });
     } catch (err) {
-        console.error('Error fetching settings from the database:', err);
-        res.status(500).send('Error fetching settings from the database');
+        console.error('Error fetching settings from the database (/settings):', err);
+        res.status(500).send('Error fetching settings from the database (/settings)');
     }
 });
 
 // Handle form submission
-router.post('/save-settings', upload.fields([{ name: 'favicon' }, { name: 'logo' }]), async (req, res) => {
+router.post('/settings/save-settings', upload.fields([{ name: 'favicon' }, { name: 'logo' }]), async (req, res) => {
     try {
         const existingSettings = await Settings.findOne({}); // Lấy cài đặt hiện tại
 

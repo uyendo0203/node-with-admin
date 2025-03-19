@@ -3,7 +3,7 @@ const User = require('../models/User');
 const router = express.Router();
 
 // Danh sách User
-router.get('/', async (req, res) => {
+router.get('/users', async (req, res) => {
     const breadcrumbs = [
         { name: 'Home', url: '/' },
         { name: 'Users', url: '/users' }
@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
 });
 
 // Form thêm User
-router.get('/add', (req, res) => {
+router.get('/users/add', (req, res) => {
     const breadcrumbs = [
         { name: 'Home', url: '/' },
         { name: 'Users', url: '/users' },
@@ -23,14 +23,14 @@ router.get('/add', (req, res) => {
 });
 
 // Xử lý thêm User
-router.post('/add', async (req, res) => {
+router.post('/api/users/add', async (req, res) => {
     const newUser = { username: req.body.username, email: req.body.email }; // Đảm bảo bạn có các trường đúng từ req.body
     await User.create(newUser);
     res.redirect('/users');
 });
 
 // Form sửa User
-router.get('/edit/:id', async (req, res) => {
+router.get('users/edit/:id', async (req, res) => {
     const user = await User.findById(req.params.id);
     const breadcrumbs = [
         { name: 'Home', url: '/' },
@@ -41,7 +41,7 @@ router.get('/edit/:id', async (req, res) => {
 });
 
 // Xử lý sửa User
-router.post('/edit/:id', async (req, res) => {
+router.post('/api/users/edit/:id', async (req, res) => {
     await User.findByIdAndUpdate(req.params.id, { 
         username: req.body.username, 
         email: req.body.email 
@@ -50,7 +50,7 @@ router.post('/edit/:id', async (req, res) => {
 });
 
 // Xóa User
-router.delete('/delete/:id', async (req, res) => {
+router.delete('/api/users/delete/:id', async (req, res) => {
     await User.findByIdAndDelete(req.params.id);
     res.redirect('/users');
 });

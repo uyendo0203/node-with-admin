@@ -31,12 +31,26 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.set('views', path.join(__dirname, 'views'));
 
 
+const loadSettingsMiddleware = async (req, res, next) => {
+  try {
+      const settings = await Settings.findOne({}); // Lấy cài đặt
+      res.locals.settings = settings || {}; // Lưu cài đặt vào res.locals
+      next(); // Tiếp tục với middleware tiếp theo hoặc route
+  } catch (error) {
+      console.error('Error fetching settings (loadSettingsMiddleware):', error);
+      res.locals.settings = {}; // Khởi tạo thành đối tượng rỗng nếu không có
+      next(); // Tiếp tục bất chấp lỗi
+  }
+};
+
+app.use(loadSettingsMiddleware);
+
 // Home
 app.get('/', (req, res) => {
   const breadcrumbs = [
     { name: 'Home', url: '/' },
 ];
-  res.render('index', { title: 'Trang chính', currentPage: '', breadcrumbs });
+  res.render('index', { title: 'Home', currentPage: '', breadcrumbs });
 });
 
 // Routes
@@ -45,11 +59,14 @@ app.use('/', apiBlogRoutes); // Sử dụng blog routes api
 const viewBlogRoutes = require('./routes/BlogRoutes/viewBlog');
 app.use('/', viewBlogRoutes); // Sử dụng blog routes view
 
-const userRoutes = require('./routes/UserRoutes');
-app.use('/users', userRoutes); // Sử dụng user routes
+const apiSettingsRoutes = require('./routes/SettingsRoutes/apiSettings');
+app.use('/', apiSettingsRoutes); // Sử dụng user api
+const viewSettingsRoutes = require('./routes/SettingsRoutes/viewSettings');
+app.use('/', viewSettingsRoutes); // Sử dụng user routes
 
-const settingsRoutes = require('./routes/SettingsRoute');
-app.use('/settings', settingsRoutes); // Sử dụng user routes
+
+const userRoutes = require('./routes/UserRoutes');
+app.use('/', userRoutes); // Sử dụng user routes
 
 
 // Chạy server
