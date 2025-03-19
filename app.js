@@ -6,6 +6,8 @@ const methodOverride = require('method-override');
 const path = require('path'); // Moved here
 const app = express();
 require('dotenv').config();
+const Settings = require('./models/Settings');
+
 
 // Kết nối MongoDB
 mongoose.connect(process.env.MONGO_URI, {
