@@ -70,7 +70,7 @@ router.post('/settings/save-settings', upload.fields([{
         const logoPath = req.files['logo'] && req.files['logo'].length > 0 ? req.files['logo'][0].filename : existingSettings.logo;
         const address = req.body.address;
         const phone = req.body.phone;
-        const site_title = req.body.site_title;
+        const site_name = req.body.site_name;
         const site_des = req.body.site_des;
         const copyright = req.body.copyright;
 
@@ -79,7 +79,7 @@ router.post('/settings/save-settings', upload.fields([{
         existingSettings.logo = logoPath;
         existingSettings.address = address;
         existingSettings.phone = phone;
-        existingSettings.site_title = site_title;
+        existingSettings.site_name = site_name;
         existingSettings.site_des = site_des;
         existingSettings.copyright = copyright;
 
