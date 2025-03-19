@@ -13,7 +13,7 @@ router.use(express.urlencoded({
 // Configure multer
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, path.join(__dirname, '../public/uploads/')); // Đường dẫn đến thư mục uploads
+        cb(null, path.join(__dirname, '../../public/uploads/')); // Đường dẫn đến thư mục uploads
     },
     filename: function (req, file, cb) {
         cb(null, Date.now() + '-' + file.originalname);
@@ -34,7 +34,7 @@ router.get('/settings', async (req, res) => {
             url: '/settings'
         }
     ];
-
+    
     try {
         const settings = await Settings.findOne({});
         res.locals.settings = settings; // Khởi tạo làm đối tượng rỗng nếu không có
@@ -52,44 +52,42 @@ router.get('/settings', async (req, res) => {
 });
 
 // Handle form submission
-router.post('/settings/save-settings', upload.fields([{
-        name: 'favicon'
-    },
-    {
-        name: 'logo'
-    }
+router.post('/settings/save-settings', upload.fields([
+    { name: 'favicon' },
+    { name: 'logo' }
 ]), async (req, res) => {
     try {
-        const existingSettings = await Settings.findOne({}); // Lấy cài đặt hiện tại
+        console.log("Request Body:", req.body);
+        console.log("Uploaded Files:", req.files);
+
+        const existingSettings = await Settings.findOne({});
 
         if (!existingSettings) {
-            return res.status(404).send('Settings not found.');
+            return res.status(404).json({ error: 'Settings not found.' });
         }
 
-        const faviconPath = req.files['favicon'] && req.files['favicon'].length > 0 ? req.files['favicon'][0].filename : existingSettings.favicon;
-        const logoPath = req.files['logo'] && req.files['logo'].length > 0 ? req.files['logo'][0].filename : existingSettings.logo;
-        const address = req.body.address;
-        const phone = req.body.phone;
-        const site_name = req.body.site_name;
-        const site_des = req.body.site_des;
-        const copyright = req.body.copyright;
+        const faviconPath = req.files['favicon']?.[0]?.filename || existingSettings.favicon;
+        const logoPath = req.files['logo']?.[0]?.filename || existingSettings.logo;
 
-        // Cập nhật cài đặt
         existingSettings.favicon = faviconPath;
         existingSettings.logo = logoPath;
-        existingSettings.address = address;
-        existingSettings.phone = phone;
-        existingSettings.site_name = site_name;
-        existingSettings.site_des = site_des;
-        existingSettings.copyright = copyright;
+        existingSettings.address = req.body.address;
+        existingSettings.phone = req.body.phone;
+        existingSettings.site_name = req.body.site_name;
+        existingSettings.site_des = req.body.site_des;
+        existingSettings.copyright = req.body.copyright;
 
-        await existingSettings.save(); // Lưu thay đổi
-        console.log('Settings updated successfully in MongoDB');
-        // res.redirect('/settings?success=true');
+        console.log("Updated Settings:", existingSettings);
+        await existingSettings.save();
+
+        await existingSettings.save();
+        console.log("Settings updated successfully");
+        res.redirect('/settings')
     } catch (err) {
-        console.error('Error saving settings to the database:', err);
-        return res.status(500).send('Error saving settings to the database: ' + err.message);
+        console.error("Error saving settings to the database:", err);
+        return res.status(500).json({ error: "Internal Server Error", details: err.message });
     }
 });
+
 
 module.exports = router;
