@@ -57,8 +57,8 @@ router.post('/settings/save-settings', upload.fields([
     { name: 'logo' }
 ]), async (req, res) => {
     try {
-        console.log("Request Body:", req.body);
-        console.log("Uploaded Files:", req.files);
+        // console.log("Request Body:", req.body);
+        // console.log("Uploaded Files:", req.files);
 
         const existingSettings = await Settings.findOne({});
 
@@ -77,7 +77,7 @@ router.post('/settings/save-settings', upload.fields([
         existingSettings.site_des = req.body.site_des;
         existingSettings.copyright = req.body.copyright;
 
-        console.log("Updated Settings:", existingSettings);
+        // console.log("Updated Settings:", existingSettings);
         await existingSettings.save();
 
         await existingSettings.save();
